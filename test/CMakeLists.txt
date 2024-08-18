@@ -7,7 +7,7 @@ add_executable(
 
 target_link_libraries(
   test_hash_map
-  hashmap_example
+  hash_map_parse
   GTest::gtest_main
 )
 

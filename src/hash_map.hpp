@@ -51,7 +51,6 @@ public:
 
     T_Value get(const T_Key& key) const
     {
-        std::cout << "Has first" << first_key.has_value() << std::endl;
         auto& bucket = get_bucket(key); 
         for (auto& pair : bucket)
         {
@@ -62,6 +61,20 @@ public:
         }
 
         throw std::out_of_range("Key not found");
+    }
+
+    T_Value get(const T_Key& key, const T_Value& default_value) const
+    {
+        auto& bucket = get_bucket(key);
+        for (auto& pair : bucket)
+        {
+            if (pair.first == key)
+            {
+                return pair.second;
+            }
+        }
+
+        return default_value;
     }
 
     void remove(const T_Key& key)
