@@ -5,47 +5,36 @@
 namespace hash_map_example
 {
 
+static size_t write_function_direct(void *ptr, size_t size, size_t nmemb, void* data) {
+    WordExtractor *extractor = (WordExtractor*) data;
+
+    for (int i = 0; i < size * nmemb; i++)
+    {
+        extractor->parse_char(((char*) ptr)[i]);
+    }
+
+    return size * nmemb;
+}
+
 HashMap<std::string, int> process_url(std::string url)
 {
     HashMap<std::string, int> hash_map;
-    // auto curl = curl_easy_init();
-    // if (curl)
-    // {
-    //     StreamEventHandler event_handler(os);
-    //     MiniJsonParser parser(event_handler);
-    //     std::string response_string;
-    //     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-    //     curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
+    auto curl = curl_easy_init();
+    if (curl)
+    {
+        WordExtractorCallback callback = [&] (std::string word) { hash_map.insert(word, hash_map.get(word, 0) + 1); };
+        WordExtractor extractor(callback);
 
-    //     if (use_buffer)
-    //     {
-    //         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_function_buffered);
-    //         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response_string);
-    //     }
-    //     else
-    //     {
-    //         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_function_direct);
-    //         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &parser);
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
 
-    //     }
-    //     curl_easy_perform(curl);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_function_direct);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &extractor);
 
-    //     if (use_buffer)
-    //     {
-    //         long response_code;
-    //         curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
-    //         if (response_code != 200)
-    //         {
-    //             os << "Error: " << response_code << std::endl;
-    //             return;
-    //         }
-    //         std::istringstream is(response_string);
-    //         process_stream(is, os);
-    //     }
-
-    //     curl_easy_cleanup(curl);
-    //     curl = NULL;
-    // }
+        curl_easy_perform(curl);
+        curl_easy_cleanup(curl);
+        curl = NULL;
+    }
 
     return hash_map;
 }
