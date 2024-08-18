@@ -26,11 +26,7 @@ void WordExtractor::parse_char(char c)
 
 WordExtractorCallback CallbackStreamWrapper(std::ostream& os)
 {
-    return [&] (std::string word) { os << word << std::endl; };
-    // return std::bind(&std::ostream::operator<<, std::ref(os), std::placeholders::_1);
+    return [&] (std::string word) { os << word << std::endl; };    
 }
 
-
-
-}
-
+} // namespace hash_map_example

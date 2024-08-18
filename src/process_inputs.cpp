@@ -22,6 +22,10 @@ HashMap<std::string, int> process_url(std::string url)
     auto curl = curl_easy_init();
     if (curl)
     {
+
+        // The following function takes a word as an argument,
+        // loads the word count for it from the hash map,
+        // and increments the count by 1.
         WordExtractorCallback callback = [&] (std::string word) { hash_map.insert(word, hash_map.get(word, 0) + 1); };
         WordExtractor extractor(callback);
 
@@ -42,7 +46,12 @@ HashMap<std::string, int> process_url(std::string url)
 HashMap<std::string, int> process_stream(std::istream& is)
 {
     HashMap<std::string, int> map;
+
+    // The following function takes a word as an argument,
+    // loads the word count for it from the hash map,
+    // and increments the count by 1.
     std::function<void(std::string)> callback = [&] (std::string word) { map.insert(word, map.get(word, 0) + 1); };
+
     WordExtractor extractor(callback);
     while (is)
     {

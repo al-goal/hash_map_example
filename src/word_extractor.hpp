@@ -12,7 +12,6 @@ class WordExtractor
 {
     public:
 
-
     WordExtractor(WordExtractorCallback& callback);
 
     void parse_char(char c);

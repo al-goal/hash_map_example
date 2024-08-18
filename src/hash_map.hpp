@@ -27,7 +27,6 @@ public:
         Iterator& operator++()
         {
             ++bucket_iterator;
-            // std::cout << "Bucket iterator: " << bucket_index << " " << std::endl;  
             if (bucket_iterator == map.buckets[bucket_index].end())
             {
                 ++bucket_index;
@@ -55,7 +54,6 @@ public:
 
         const KeyValuePair& operator*() const
         {
-            std::cout << "Bucket iterator: " << bucket_index << " " << std::endl;  
             return *bucket_iterator;
         }
 
@@ -93,10 +91,6 @@ public:
             throw std::invalid_argument("HashMap must have at least one bucket");
         }
     }
-    ~HashMap()
-    {
-        std::cout << "Destructor called" << std::endl;
-    }
 
     void insert(const T_Key& key, const T_Value& value)
     {
@@ -114,12 +108,9 @@ public:
         if (!first_key)
         {
             first_key = key;
-            std::cout << "First key: " << *first_key << std::endl;
-            std::cout << "Insert, has first" << first_key.has_value() << std::endl;
         }
         last_key = key;
-
-    }
+   }
 
     T_Value get(const T_Key& key) const
     {
@@ -186,14 +177,12 @@ private:
     Bucket& get_bucket(const T_Key& key)
     {
         size_t index = (hash_function(key) % num_buckets + num_buckets) % num_buckets;
-        std::cout << "Non-const get_bucket " << index << " " << num_buckets << std::endl;
         return buckets[index];
     }
 
     const Bucket& get_bucket(const T_Key& key) const
     {
         size_t index = (hash_function(key) % num_buckets + num_buckets) % num_buckets;
-        std::cout << "Const get_bucket " << index << " " << num_buckets << std::endl;
         return buckets[index];
     }
 

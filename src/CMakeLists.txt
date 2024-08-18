@@ -1,6 +1,5 @@
 add_library(
     hash_map_parse
-    hash_map.cpp
     process_inputs.cpp
     word_extractor.cpp
 )
