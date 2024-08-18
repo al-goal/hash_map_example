@@ -11,18 +11,31 @@ int main(int argc, char** argv)
 {
     // std::string url = "https://www.gutenberg.org/files/98/98-0.txt";
 
-    std::string path = "/home/aln/hash_map_example/98-0_short.txt";
+    // std::string path = "/home/aln/hash_map_example/98-0_short.txt";
+    std::string path = "/home/aln/hash_map_example/98-0.txt";
 
     hash_map_example::WordExtractorCallback callback = hash_map_example::CallbackStreamWrapper(std::cout);
     hash_map_example::WordExtractor extractor(callback); 
 
-    std::ifstream ifs(path.c_str());
-    auto map = hash_map_example::process_stream(ifs);
-
-    for (auto& pair : map)
     {
-        std::cout << pair.first << " " << pair.second << std::endl;
+        std::ifstream ifs(path.c_str());
+        auto map = hash_map_example::process_stream(ifs);
+
+        // for (auto& pair : map)
+        // {
+        //     std::cout << pair.first << " " << pair.second << std::endl;
+        // }
     }
+    {
+        std::ifstream ifs(path.c_str());
+        auto map_histogram = hash_map_example::word_size_histogram(ifs);
+        for (auto& pair : map_histogram)
+        {
+            std::cout << "Word length: " << pair.first << " count: " << pair.second << std::endl;
+        }
+    }
+    
+
 
     // while (ifs)
     // {

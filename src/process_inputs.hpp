@@ -8,6 +8,7 @@ namespace hash_map_example
 
 HashMap<std::string, int> process_url(std::string url);
 HashMap<std::string, int> process_stream(std::istream& is);
+HashMap<int, int> word_size_histogram(std::istream& is);
 
 } // namespace hash_map_example
 

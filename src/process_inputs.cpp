@@ -65,4 +65,19 @@ HashMap<std::string, int> process_stream(std::istream& is)
     return map;
 }
 
+HashMap<int, int> word_size_histogram(std::istream& is)
+{
+    HashMap<int, int> map;
+    std::function<void(std::string)> callback = [&] (std::string word) { map.insert(word.size(), map.get(word.size(), 0) + 1); };
+    WordExtractor extractor(callback);
+    while (is)
+    {
+        char c;
+        is.get(c);
+        extractor.parse_char(c);
+    }
+
+    return map;
+}
+
 } // namespace hash_map_example
