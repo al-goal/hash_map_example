@@ -15,11 +15,83 @@ public:
     using HashFunction = std::function<int(T_Key)>;
     using Bucket = std::list<KeyValuePair>;
 
-    HashMap(int num_buckets = 100, HashFunction hash_function = std::hash<T_Key>())
+    struct Iterator
+    {
+        Iterator(const HashMap& map, size_t bucket_index, typename Bucket::const_iterator bucket_iterator)
+        :   map(map),
+            bucket_index(bucket_index),
+            bucket_iterator(bucket_iterator)
+        {
+        }
+
+        Iterator& operator++()
+        {
+            ++bucket_iterator;
+            // std::cout << "Bucket iterator: " << bucket_index << " " << std::endl;  
+            if (bucket_iterator == map.buckets[bucket_index].end())
+            {
+                ++bucket_index;
+                while (bucket_index < map.num_buckets && map.buckets[bucket_index].empty())
+                {
+                    ++bucket_index;
+                }
+                if (bucket_index < map.num_buckets)
+                {
+                    bucket_iterator = map.buckets[bucket_index].begin();
+                }
+            }
+            return *this;
+        }
+
+        bool operator!=(const Iterator& other) const
+        {
+            if (bucket_index == map.num_buckets && other.bucket_index == map.num_buckets)
+            {
+                // Special case for end()
+                return false;
+            }
+            return bucket_index != other.bucket_index || bucket_iterator != other.bucket_iterator;
+        }
+
+        const KeyValuePair& operator*() const
+        {
+            std::cout << "Bucket iterator: " << bucket_index << " " << std::endl;  
+            return *bucket_iterator;
+        }
+
+        const HashMap& map;
+        size_t bucket_index;
+        typename Bucket::const_iterator bucket_iterator;
+    };
+
+    Iterator begin() const
+    {
+        size_t index = 0;
+        while (index < num_buckets && buckets[index].empty())
+        {
+            ++index;
+        }
+        if (index < num_buckets)
+        {
+            return Iterator(*this, index, buckets[index].begin());
+        }
+        return end();
+    }
+
+    Iterator end() const
+    {
+        return Iterator(*this, num_buckets, Bucket().end());
+    }
+
+    HashMap(int num_buckets = 1024, HashFunction hash_function = std::hash<T_Key>())
     :   hash_function(hash_function),
         num_buckets(num_buckets),
         buckets(num_buckets)
     {
+        if (num_buckets < 1)
+        {
+            throw std::invalid_argument("HashMap must have at least one bucket");
+        }
     }
     ~HashMap()
     {

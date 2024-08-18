@@ -18,6 +18,12 @@ int main(int argc, char** argv)
 
     std::ifstream ifs(path.c_str());
     auto map = hash_map_example::process_stream(ifs);
+
+    for (auto& pair : map)
+    {
+        std::cout << pair.first << " " << pair.second << std::endl;
+    }
+
     // while (ifs)
     // {
     //     char c;
