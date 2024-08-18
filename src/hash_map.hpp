@@ -52,6 +52,11 @@ public:
             return bucket_index != other.bucket_index || bucket_iterator != other.bucket_iterator;
         }
 
+        bool operator==(const Iterator& other) const
+        {
+            return !(*this != other);
+        }
+
         const KeyValuePair& operator*() const
         {
             return *bucket_iterator;
